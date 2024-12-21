@@ -1,0 +1,12 @@
+[package]
+name = "grpc-server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tonic = "0.7"
+prost = "0.10"
+tokio = { version="1.41.1", features = ["rt-multi-thread","macros"] }
+
+[build-dependencies]
+tonic-build = "0.7"
