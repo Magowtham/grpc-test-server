@@ -1,5 +1,20 @@
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct WamrSdkResponse {
+pub struct WamrSdkNewInstanceResponse {
+    #[prost(int32, tag="1")]
+    pub status: i32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WamrSdkStartResponse {
+    #[prost(int32, tag="1")]
+    pub status: i32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WamrSdkKillResponse {
+    #[prost(int32, tag="1")]
+    pub status: i32,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct WamrSdkDeleteResponse {
     #[prost(int32, tag="1")]
     pub status: i32,
 }
@@ -10,10 +25,22 @@ pub mod wamr_sdk_server {
     ///Generated trait containing gRPC methods that should be implemented for use with WamrSdkServer.
     #[async_trait]
     pub trait WamrSdk: Send + Sync + 'static {
-        async fn sdk_test(
+        async fn new_instance(
             &self,
             request: tonic::Request<()>,
-        ) -> Result<tonic::Response<super::WamrSdkResponse>, tonic::Status>;
+        ) -> Result<tonic::Response<super::WamrSdkNewInstanceResponse>, tonic::Status>;
+        async fn start(
+            &self,
+            request: tonic::Request<()>,
+        ) -> Result<tonic::Response<super::WamrSdkStartResponse>, tonic::Status>;
+        async fn kill(
+            &self,
+            request: tonic::Request<()>,
+        ) -> Result<tonic::Response<super::WamrSdkKillResponse>, tonic::Status>;
+        async fn delete(
+            &self,
+            request: tonic::Request<()>,
+        ) -> Result<tonic::Response<super::WamrSdkDeleteResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct WamrSdkServer<T: WamrSdk> {
@@ -62,18 +89,21 @@ pub mod wamr_sdk_server {
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             let inner = self.inner.clone();
             match req.uri().path() {
-                "/wamr_sdk.WamrSdk/SdkTest" => {
+                "/wamr_sdk.WamrSdk/NewInstance" => {
                     #[allow(non_camel_case_types)]
-                    struct SdkTestSvc<T: WamrSdk>(pub Arc<T>);
-                    impl<T: WamrSdk> tonic::server::UnaryService<()> for SdkTestSvc<T> {
-                        type Response = super::WamrSdkResponse;
+                    struct NewInstanceSvc<T: WamrSdk>(pub Arc<T>);
+                    impl<T: WamrSdk> tonic::server::UnaryService<()>
+                    for NewInstanceSvc<T> {
+                        type Response = super::WamrSdkNewInstanceResponse;
                         type Future = BoxFuture<
                             tonic::Response<Self::Response>,
                             tonic::Status,
                         >;
                         fn call(&mut self, request: tonic::Request<()>) -> Self::Future {
                             let inner = self.0.clone();
-                            let fut = async move { (*inner).sdk_test(request).await };
+                            let fut = async move {
+                                (*inner).new_instance(request).await
+                            };
                             Box::pin(fut)
                         }
                     }
@@ -82,7 +112,103 @@ pub mod wamr_sdk_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let inner = inner.0;
-                        let method = SdkTestSvc(inner);
+                        let method = NewInstanceSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/wamr_sdk.WamrSdk/Start" => {
+                    #[allow(non_camel_case_types)]
+                    struct StartSvc<T: WamrSdk>(pub Arc<T>);
+                    impl<T: WamrSdk> tonic::server::UnaryService<()> for StartSvc<T> {
+                        type Response = super::WamrSdkStartResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(&mut self, request: tonic::Request<()>) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).start(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = StartSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/wamr_sdk.WamrSdk/Kill" => {
+                    #[allow(non_camel_case_types)]
+                    struct KillSvc<T: WamrSdk>(pub Arc<T>);
+                    impl<T: WamrSdk> tonic::server::UnaryService<()> for KillSvc<T> {
+                        type Response = super::WamrSdkKillResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(&mut self, request: tonic::Request<()>) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).kill(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = KillSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/wamr_sdk.WamrSdk/Delete" => {
+                    #[allow(non_camel_case_types)]
+                    struct DeleteSvc<T: WamrSdk>(pub Arc<T>);
+                    impl<T: WamrSdk> tonic::server::UnaryService<()> for DeleteSvc<T> {
+                        type Response = super::WamrSdkDeleteResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(&mut self, request: tonic::Request<()>) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).delete(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = DeleteSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(

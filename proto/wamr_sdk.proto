@@ -5,10 +5,26 @@ package wamr_sdk;
 
 import "google/protobuf/empty.proto";
 
-message WamrSdkResponse {
+message WamrSdkNewInstanceResponse {
     int32 status = 1;
 }
 
+message WamrSdkStartResponse {
+    int32 status = 1;
+}
+
+message WamrSdkKillResponse {
+    int32 status = 1;
+}
+
+message WamrSdkDeleteResponse {
+    int32 status = 1;
+}
+
+
 service WamrSdk {
-    rpc SdkTest(google.protobuf.Empty) returns (WamrSdkResponse);
+    rpc NewInstance(google.protobuf.Empty) returns (WamrSdkNewInstanceResponse);
+    rpc Start(google.protobuf.Empty) returns (WamrSdkStartResponse);
+    rpc Kill(google.protobuf.Empty) returns (WamrSdkKillResponse);
+    rpc Delete(google.protobuf.Empty) returns (WamrSdkDeleteResponse);
 }
